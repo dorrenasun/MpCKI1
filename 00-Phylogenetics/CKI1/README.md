@@ -29,8 +29,7 @@ Working pipeline (All scripts should be run from the 00-Codes folder):
 
 - Step 6: Run interpro analysis with the sequence files generated in Step 3.
 
-- Step 6: Visualize the tree with "07-Visualization.R". Pay attention to the input files or directory in the script.
-- Step 7 (optional): Translate the names of sequence alignments etc. using "08-TranslateAlignment.R". Pay attention to the input files or directory in the script.
+- Step 7: Visualization of the phylogenetic tree
 
 
 The files used in creating the phylogenetic tree of the manuscript is in the directory "ForPublication".
