@@ -1,0 +1,22 @@
+{
+    "read_files": "[ ./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_31_30Z-641516957/1578-WT-V3-ds.ca6191d5947045bf8ebb9b152d736e5b/1578-WT-V3_S13_L001_R1_001.fastq.gz, ./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_31_30Z-641516957/1578-WT-V3-ds.ca6191d5947045bf8ebb9b152d736e5b/1578-WT-V3_S13_L002_R1_001.fastq.gz, ./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_31_30Z-641516957/1578-WT-V3-ds.ca6191d5947045bf8ebb9b152d736e5b/1578-WT-V3_S13_L003_R1_001.fastq.gz, ./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_31_30Z-641516957/1578-WT-V3-ds.ca6191d5947045bf8ebb9b152d736e5b/1578-WT-V3_S13_L004_R1_001.fastq.gz ]",
+    "expected_format": "SR",
+    "compatible_fragment_ratio": 1.0,
+    "num_compatible_fragments": 7451853,
+    "num_assigned_fragments": 7451853,
+    "num_frags_with_concordant_consistent_mappings": 7451743,
+    "num_frags_with_inconsistent_or_orphan_mappings": 404,
+    "strand_mapping_bias": 0.000054212564513287249,
+    "MSF": 0,
+    "OSF": 0,
+    "ISF": 0,
+    "MSR": 0,
+    "OSR": 0,
+    "ISR": 0,
+    "SF": 404,
+    "SR": 7451743,
+    "MU": 0,
+    "OU": 0,
+    "IU": 0,
+    "U": 0
+}

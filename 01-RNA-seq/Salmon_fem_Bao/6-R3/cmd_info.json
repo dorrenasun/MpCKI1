@@ -1,0 +1,15 @@
+{
+    "salmon_version": "1.9.0",
+    "index": "./RefGenome/Index_Fem/Index",
+    "libType": "A",
+    "unmatedReads": [
+        "./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_35_06Z-641808193/1587-6-R3-ds.92bee64ec7f64825823040ae8e84e422/1587-6-R3_S22_L001_R1_001.fastq.gz",
+        "./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_35_06Z-641808193/1587-6-R3-ds.92bee64ec7f64825823040ae8e84e422/1587-6-R3_S22_L002_R1_001.fastq.gz",
+        "./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_35_06Z-641808193/1587-6-R3-ds.92bee64ec7f64825823040ae8e84e422/1587-6-R3_S22_L003_R1_001.fastq.gz",
+        "./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_35_06Z-641808193/1587-6-R3-ds.92bee64ec7f64825823040ae8e84e422/1587-6-R3_S22_L004_R1_001.fastq.gz"
+    ],
+    "threads": "12",
+    "validateMappings": [],
+    "output": "./Salmon_all/6-R3",
+    "auxDir": "aux_info"
+}

@@ -1,0 +1,15 @@
+{
+    "salmon_version": "1.9.0",
+    "index": "./RefGenome/Index_Fem/Index",
+    "libType": "A",
+    "unmatedReads": [
+        "./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_33_55Z-641758156/1584-WT-R3-ds.310e59aa3b1a493b9e00a37307b91306/1584-WT-R3_S19_L001_R1_001.fastq.gz",
+        "./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_33_55Z-641758156/1584-WT-R3-ds.310e59aa3b1a493b9e00a37307b91306/1584-WT-R3_S19_L002_R1_001.fastq.gz",
+        "./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_33_55Z-641758156/1584-WT-R3-ds.310e59aa3b1a493b9e00a37307b91306/1584-WT-R3_S19_L003_R1_001.fastq.gz",
+        "./221221_R4_052_yoshitake-376831459/BaseSpace_CLI_2022-12-22_05_33_55Z-641758156/1584-WT-R3-ds.310e59aa3b1a493b9e00a37307b91306/1584-WT-R3_S19_L004_R1_001.fastq.gz"
+    ],
+    "threads": "12",
+    "validateMappings": [],
+    "output": "./Salmon_all/WT-R3",
+    "auxDir": "aux_info"
+}
