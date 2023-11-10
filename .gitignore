@@ -1,7 +1,7 @@
 .DS_STORE
-00-Phylogenetics/CKI1/01-Genomes/Combined/
-00-Phylogenetics/CKI1/02-OneKP/Extracted/
-00-Phylogenetics/CKI1/03-Dong2022/Combined/
+00-Phylogenetics/Resources/01-Genomes/Combined/
+00-Phylogenetics/Resources/02-OneKP/Extracted/
+00-Phylogenetics/Resources/03-Dong2022/Combined/
 00-Phylogenetics/CKI1/02-Output/
 00-Phylogenetics/CKI1/03-KeyOutput/
 00-Phylogenetics/TestPinus/
