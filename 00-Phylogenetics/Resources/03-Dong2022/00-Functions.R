@@ -1,7 +1,7 @@
 if (!require(data.table)) install.packages("data.table")
-if (!require(R.utils)) install.packages("R.utils")
+# if (!require(R.utils)) install.packages("R.utils")
 library(data.table)
-library(R.utils)
+# library(R.utils)
 
 #Read all fasta files
 read_fasta<-function(file){

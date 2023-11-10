@@ -4,6 +4,8 @@ if (!require(data.table)) install.packages("data.table")
 library(data.table)
 if (!require(rvest)) install.packages("rvest")
 library(rvest)
+if(!require(readxl)) install.packages("readxl")
+library(readxl)
 
 if (!require(tools)) install.packages("tools")
 library(tools)
@@ -22,6 +24,7 @@ if (!file.exists(file.list.all)) {
 }
 list.all<-fread(file.list.all)
 setnames(list.all,"1kP_Sample","Code")
+write.table(list.all[!duplicated(Order),.(Clade,Order)],file="All_clades.tsv",quote=F,row.names = F,sep="\t")
 
 #Download file with md5 info
 file.md5<-file.path(outdir,"100627.md5")
@@ -34,12 +37,14 @@ names(md5)<-c("md5","file")
 md5[,basename:=basename(file)]
 
 #Load selected clades
-file.prefix<-"Prefixes.csv"
+file.prefix<-"Prefixes.xlsx"
 if (!file.exists(file.prefix)) stop(paste(file.prefix," not found! Stop!"))
-prefixes<-read.csv(file.prefix,comment.char = "#")
+# prefixes<-read.csv(file.prefix,comment.char = "#")
+prefixes<-as.data.table(read_excel(file.prefix,sheet = 1))
+prefixes.sele<-prefixes[!grepl("#",Clade_new,fixed = T),]
 
 #Select clades based on Prefix
-list.sele<-list.all[Clade %in% prefixes$Clade,Code]
+list.sele<-list.all[Order %in% prefixes.sele$Order,Code]
 
 homepage<-"https://ftp.cngb.org/pub/gigadb/pub/10.5524/100001_101000/100627/assemblies/"
 home<-read_html(homepage)

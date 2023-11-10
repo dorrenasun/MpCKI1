@@ -8,8 +8,8 @@ inDir<-"./Resources/"
   if(!require(readxl)) install.packages("readxl")
   library(readxl)
 
-  fSource<-"./List_of_sources.xlsx"
-  list_src<-read_excel(fSource,sheet = 1,range = cell_cols("A:J"),col_names = T)
+  fSource<-"./List_of_Genomes_all.xlsx"
+  list_src<-read_excel(fSource,sheet = 1,range = cell_cols("A:L"),col_names = T)
   subset<-list_src$`File name`[!is.na(list_src$Include) & list_src$Include=="T"]
   list.file<-paste0(inDir,unique(subset))
 }
@@ -107,26 +107,27 @@ if (length(list.nonvar)>0) {
 #Retrieve Species and taxon names
 fasta.all[,Species:=list_src$Species[match(Source,list_src$`File name`)]]
 fasta.all[,Clade:=list_src$Clade[match(Source,list_src$`File name`)]]
+fasta.all[,Code:=list_src$Code[match(Source,list_src$`File name`)]]
 
-#Check Sequence Integrity
-fasta.all[,`:=`(Start=substr(Sequence,1,1),
-                End=substr(Sequence,nchar(Sequence),nchar(Sequence))
-)]
-
-fasta.all[,`:=`(N_comp=(Start=="M"),
-                C_comp=(End=="*"))]
-#Check if the integrity info was provided in the original file
-Integrity<-fasta.all[,.(Species=unique(Species),Total=.N,Sum_N=sum(N_comp),Sum_C=sum(C_comp)),by=.(Source)]
-Integrity[,NoStop:=(Sum_C/Total)<0.1]
-list.NoStop<-unlist(Integrity[!(is.na(NoStop)) & (NoStop==T),.(Source)])
-fasta.all[Source %in% list.NoStop,C_comp:=NA]
-
-fasta.all[!is.na(C_comp) & C_comp==T, Sequence:=substr(Sequence,1,nchar(Sequence)-1)]
+# #Check Sequence Integrity
+# fasta.all[,`:=`(Start=substr(Sequence,1,1),
+#                 End=substr(Sequence,nchar(Sequence),nchar(Sequence))
+# )]
+# 
+# fasta.all[,`:=`(N_comp=(Start=="M"),
+#                 C_comp=(End=="*"))]
+# #Check if the integrity info was provided in the original file
+# Integrity<-fasta.all[,.(Species=unique(Species),Total=.N,Sum_N=sum(N_comp),Sum_C=sum(C_comp)),by=.(Source)]
+# Integrity[,NoStop:=(Sum_C/Total)<0.1]
+# list.NoStop<-unlist(Integrity[!(is.na(NoStop)) & (NoStop==T),.(Source)])
+# fasta.all[Source %in% list.NoStop,C_comp:=NA]
+# 
+# fasta.all[!is.na(C_comp) & C_comp==T, Sequence:=substr(Sequence,1,nchar(Sequence)-1)]
 
 #Combine final IDs and sequences
 fasta.all[,Text:=paste0(">",pID,"\n",Sequence)]
-
-fasta.example<-fasta.all[!duplicated(Source),.(ID,pID,Gene,var,Species),by=Source]
+fasta.ID2Src<-fasta.all[,.(pID,Gene,var,Source,Clade,Species,Code)]
+fasta.example<-fasta.ID2Src[!duplicated(Source),]
 
 #Write files
 outdir<-"./Combined/"
@@ -135,9 +136,10 @@ outbase<-"AllGenomes"
 list.old<-list.files(outdir,full.names = T,recursive = T)
 if (sum(grep(outbase,list.old))>0) file.remove(list.old[grep(outbase,list.old)])
 
+message("Writing files...")
 write(fasta.all$Text,paste0(outdir,outbase,"-merged.fasta"))
-write.table(fasta.all[,.(pID,Gene,var,Source,Clade,Species)],paste0(outdir,outbase,"-ID2Source.txt"),col.names = T,row.names = F,quote = F,sep = "\t")
+write.table(fasta.ID2Src,paste0(outdir,outbase,"-ID2Source.txt"),col.names = T,row.names = F,quote = F,sep = "\t")
 write.table(fasta.example,paste0(outdir,outbase,"-example.txt"),col.names = T,row.names = F,quote = F,sep = "\t")
-write.table(Integrity[!(is.na(NoStop)) & (NoStop==T),.(Species,File=Source)],paste0(outdir,"Genome_of_No_Integrity.tsv"),col.names = T,row.names = F,quote = F,sep = "\t")
+# write.table(Integrity[!(is.na(NoStop)) & (NoStop==T),.(Species,File=Source)],paste0(outdir,"Genome_of_No_Integrity.tsv"),col.names = T,row.names = F,quote = F,sep = "\t")
 
 message("Genomes merged!")

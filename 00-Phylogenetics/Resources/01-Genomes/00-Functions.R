@@ -29,8 +29,20 @@ read_fasta<-function(file){
                     )]
   Fasta.trans[,ID:=sub("[ |\t].*","",ID)]
   Fasta.trans[,Text:=paste(paste0(">",ID),Sequence,sep = "\n")]
+  #Remove duplicated sequences with the same name and sequence
+  Fasta.uniq<-Fasta.trans[!duplicated(Text),]
+  #Find IDs that are still duplicated
+  list.dup<-Fasta.uniq[duplicated(ID),ID]
+  if (length(list.dup)>0){
+    message(paste("Some IDs are duplicated in",file,"! Postfixes added!"))
+    setnames(Fasta.uniq,"ID","oldID")
+    Fasta.uniq[oldID %in% list.dup,ID:=paste(oldID,1:.N,sep = "_"),by=oldID]
+    Fasta.uniq[is.na(ID),ID:=oldID]
+    Fasta.uniq[,Text:=paste(paste0(">",ID),Sequence,sep = "\n")]
+    
+  }
   
-  return(Fasta.trans)
+  return(Fasta.uniq[,.(Num,ID,Sequence,Text)])
 }
 
 get_primary<-function(fasta){
