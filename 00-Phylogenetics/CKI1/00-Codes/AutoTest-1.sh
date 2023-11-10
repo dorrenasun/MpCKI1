@@ -2,8 +2,8 @@
 
 #Sources
 PATH_CODE=$PWD
-#PATH_RESOURCE="$PATH_CODE/../../Resources"
-PATH_RESOURCE="$HOME/Library/CloudStorage/OneDrive-Personal/Marchantia/Codes_Analysis/Phylogenetics/Resources"
+PATH_RESOURCE="$PATH_CODE/../../Resources"
+#PATH_RESOURCE="$HOME/Library/CloudStorage/OneDrive-Personal/Marchantia/Codes_Analysis/Phylogenetics/Resources"
 PATH_GENOME="$PATH_RESOURCE/01-Genomes/Combined/AllGenomes-merged.fasta"
 PATH_ONEKP="$PATH_RESOURCE/02-OneKP/Extracted/OneKP-Nonseed-merged.fasta"
 PATH_DONG="$PATH_RESOURCE/03-Dong2022/Combined/Dong2022-merged.fasta"

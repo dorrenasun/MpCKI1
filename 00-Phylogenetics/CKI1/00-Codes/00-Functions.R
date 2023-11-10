@@ -139,10 +139,10 @@ OneKPdir<-dirname(para[V1=="Path_OneKP",V2])
 Genomedir<-dirname(para[V1=="Path_Genome",V2])
 Dongdir<-dirname(para[V1=="Path_Dong",V2])
 
-#Substitute the home directory in paths
-OneKPdir<-sub("/Users/.*/Library",file.path(Mac_home,"Library"),OneKPdir)
-Genomedir<-sub("/Users/.*/Library",file.path(Mac_home,"Library"),Genomedir)
-Dongdir<-sub("/Users/.*/Library",file.path(Mac_home,"Library"),Dongdir)
+# #Substitute the home directory in paths
+# OneKPdir<-sub("/Users/.*/Library",file.path(Mac_home,"Library"),OneKPdir)
+# Genomedir<-sub("/Users/.*/Library",file.path(Mac_home,"Library"),Genomedir)
+# Dongdir<-sub("/Users/.*/Library",file.path(Mac_home,"Library"),Dongdir)
 
 thisfile<-file.path(codedir_ori,"00-Functions.R")
 myCopy(thisfile,codedir)
