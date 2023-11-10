@@ -1,0 +1,158 @@
+- Build blast db
+conda activate bioinfo
+makeblastdb -in P.tabuliformis_V1.0_ml.pep.fasta -parse_seqids -dbtype prot -out Pinus_db
+
+Log:
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt2G01370 name=PtGT??-4 seq_id=chr2 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt2G01370 name=PtGT??-4 seq_id=chr2 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt2G01370 name=PtGT??-4 seq_id=chr2 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt2G01370 name=PtGT??-4 seq_id=chr2 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt5G14150 name=PtGT??-2 seq_id=chr5 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt8G49330 name=PtGT??-1 seq_id=chr8 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt8G49330 name=PtGT??-1 seq_id=chr8 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt8G49330 name=PtGT??-1 seq_id=chr8 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt8G49330 name=PtGT??-1 seq_id=chr8 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt9G41980 name=PtGT??-5 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt9G42010 name=PtGT??-3 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt9G42010 name=PtGT??-3 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xA6] in string at byte 32
+gene=Pt9G42010 name=PtGT??-3 seq_id=chr9 type=cds
+Error: (803.7) [makeblastdb] Blast-def-line-set.E.title
+Bad char [0xC3] in string at byte 33
+gene=Pt9G42010 name=PtGT??-3 seq_id=chr9 type=cds
+Adding sequences from FASTA; added 144584 sequences in 1.9367 seconds.
+
+#Corrected the gene name in fasta file. Try again:
+
+makeblastdb -in P.tabuliformis_V1.0_ml.pep.fasta -parse_seqids -dbtype prot -out Pinus_db
+
+Log:
+Building a new DB, current time: 11/09/2023 12:48:12
+New DB name:   /Users/sunrui/Library/CloudStorage/OneDrive-Personal/Marchantia/Manuscripts/202304-MpCKI1/02-Github_submission/repos/00-Phylogenetics/CKI1/TestPinus/Pinus_db
+New DB title:  P.tabuliformis_V1.0_ml.pep.fasta
+Sequence type: Protein
+Deleted existing Protein BLAST database named /Users/sunrui/Library/CloudStorage/OneDrive-Personal/Marchantia/Manuscripts/202304-MpCKI1/02-Github_submission/repos/00-Phylogenetics/CKI1/TestPinus/Pinus_db
+Keep MBits: T
+Maximum file size: 1000000000B
+Adding sequences from FASTA; added 144584 sequences in 2.01439 seconds.
+
+blastp -db Pinus_db -query Blast_Input.fasta -out TestBlast-output.txt -evalue '0.001' -max_target_seqs 50000 -num_threads 8
+
+	rm 00-Genomes_db.*
+
+

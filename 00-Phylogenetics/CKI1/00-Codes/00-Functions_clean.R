@@ -107,9 +107,10 @@ order.clade<-c("Chlorophytes",
                "Monocots",
                "Magnoliids",
                "Eudicots",
-               "Angiosperms"
+               "Angiosperms",
+               "Unknown"
                )
-order.db<-c("Genome","OneKP","Dong")
+order.db<-c("Genome","OneKP","Dong","Manual")
 order.tag<-c("Core","Neighbor","Outgroup")
 Mac_home<-system("echo ~",intern = TRUE)
 Homedir<-".." #Edit if neccessary

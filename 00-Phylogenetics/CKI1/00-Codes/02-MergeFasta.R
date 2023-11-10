@@ -19,14 +19,15 @@ myCopy(inFile.fasta.man,indir,overwrite = T)
 #################################### Function ##################################
 
 merge_ID<-function(names,by=";"){
+  if (sum(is.na(names)==T)==length(names)) return(as.character(NA))
   names_sep<-setdiff(unlist(strsplit(names,by,fixed = T)),c(NA,"NA"))
   if (length(names_sep)>0){
     namelist<-data.table(Name=names_sep,
-                         Man=(names_sep %in% manuals.id),
+                         #Man=(names_sep %in% manuals.id),
                          Len=nchar(names_sep)
                          )
-    setorder(namelist,-Man,Len,Name)
-    
+    #setorder(namelist,-Man,Len,Name)
+    setorder(namelist,Len,Name)
     newname<-paste(namelist$Name,collapse = by)
     return(newname)
     
@@ -64,11 +65,24 @@ myCopy(inFile.ID2Src.Dong,indir)
 ID2Src.Genome<-fread(inFile.ID2Src.Genome,sep = "\t")
 ID2Src.OneKP<-fread(inFile.ID2Src.OneKP,sep = "\t")
 ID2Src.Dong<-fread(inFile.ID2Src.Dong,sep = "\t")
+
+#Check if any Clade info is illegal
+list.illegal<-setdiff(ID2Src.Genome$Clade,order.clade)
+if (length(list.illegal)>0) {
+  message(paste("Some Clade name is incorrect in", inFile.ID2Src.Genome,"!"))
+  message(paste(list.illegal,sep = "\n"))
+  }
+list.illegal<-setdiff(ID2Src.OneKP$Clade,order.clade)
+if (length(list.illegal)>0) {
+  message(paste("Some Clade name is incorrect in", inFile.ID2Src.OneKP,"!"))
+  message(paste(list.illegal,sep = "\n"))
+}
+
+
 ID2Src.all<-rbind(ID2Src.Genome[,.(ID=pID,Clade,Species,Code,Database=order.db[1])],
                   ID2Src.OneKP[,.(ID=newID1,Clade,Species,Code,Database=order.db[2])],
                   ID2Src.Dong[,.(ID=pID,Clade="Liverworts",Species,Code,Database=order.db[3])]
 )
-
 
 
 #Retrieve source information for all sequences
@@ -79,42 +93,44 @@ if (length(list.missing)>0) {
 } 
 
 fasta.full<-merge(fasta[,.(ID,Sequence)],ID2Src.all,by="ID",all.x = T)
-fasta.full[Clade %in% c("Basal Angiosperms","Magnoliids","Eudicots","Monocots"),Clade := "Angiosperms"]
-
-
-
-#Substitute some Clade names
-
+Clades<-unique(fasta.full[,.(Species,Clade)])
 
 
 {#Introduce manual sequences
   manuals<-read_fasta(inFile.fasta.man)
-  #Default species info:NA
-  manuals[,`:=`(Species=as.character(NA),
-                Clade=as.character(NA),
-                Code=as.character(NA),
-                Source=inFile.fasta.man,
-                Database="Manual")]
-  #Correct for ID if there is species info
+  
+  #Parse species info
   setnames(manuals,"ID","ID_ori")
   manuals[grepl("\\[|\\]",ID_ori),`:=`(ID=sub("\\[.*\\]","",ID_ori),
-                                   Taxa=sub(".*\\[(.*)\\].*","\\1",ID_ori)
+                                       Species=sub(".*\\[(.*)\\].*","\\1",ID_ori)
   )]
-  manuals[!grepl("\\[|\\]",ID_ori),ID:=ID_ori]
-  manuals[,Text:=paste0(">",ID,"\n",Sequence)]
+  manuals[is.na(ID),ID:=ID_ori]
+  manuals[!is.na(Species),Species:=gsub("_"," ",Species)]
+  manuals[is.na(Species),Species:="Unknown"]
   
-  #Load species info from input
-  manuals[!is.na(Taxa),`:=`(Species=sub(".*\\+","",Taxa),
-                           Clade=sub("\\+.*","",Taxa)
-  )]
-  manuals[!is.na(Taxa),Species:=gsub("_"," ",Species)]
+  #Sequences-Species matching with existing record
+  manuals.included<-merge(manuals[,.(Species,Sequence,ID)],fasta.full[,.(ID_ori=ID,Sequence,Species,Code,Clade,Database)],by=c("Species","Sequence"))
+  manuals.included[,Database:=paste0("Manual;",Database)]
+  
+  #Those not included in the current record
+  manuals.new<-merge(manuals[!ID %in% manuals.included$ID,.(ID,Sequence,Species)],Clades,all.x = T)
+  manuals.new[is.na(Clade),Clade:="Unknown"]
+  #Make up some Code
+  manuals.new[,Code:="Man"]
+  manuals.new[,Database:="Manual"]
+  
+  
 }
 
 #If manual seqs already included
 SDcols<-names(fasta.full)
-fasta.all<-rbind(fasta.full,manuals[,..SDcols])
+fasta.all<-rbind(fasta.full[!ID %in% manuals.included$ID_ori,..SDcols],
+                 manuals.included[,..SDcols],
+                 manuals.new[,..SDcols])
 
-manuals.id<-unique(unlist(strsplit(manuals$ID,";",fixed = T)))
+#Combine all angiosperm clades
+fasta.all[Clade %in% c("Basal Angiosperms","Magnoliids","Eudicots","Monocots"),Clade := "Angiosperms"]
+
 
 #Merge duplicated sequence
 fasta.uni<-fasta.all[,.(Name=merge_ID(c(ID),by=";"),
@@ -124,14 +140,16 @@ fasta.uni<-fasta.all[,.(Name=merge_ID(c(ID),by=";"),
                         Database=merge_ID(c(Database),by=";")
 ),by=Sequence]
 
-fasta.uni[Clade %in% c("Basal Angiosperms","Magnoliids","Eudicots","Monocots"),Clade := "Angiosperms"]
-
 #Check if there are seqs that has NA info
 list.NA<-fasta.uni[is.na(Name) | is.na(Clade)|is.na(Species)|is.na(Database),]
 if (nrow(list.NA)>0){
   message("Some sequences have unknown info!") 
   message(paste(list.NA$Name,sep = "\n"))
 }
+
+#Set order for sequences
+setorder(fasta.uni,Clade,Species,Code,Name)
+
 
 #Mark the fragmental sequences (length<300)
 fasta.uni[nchar(Sequence)<300,`:=`(Frag=TRUE,
@@ -151,7 +169,7 @@ fasta.uni[,Text:=paste0(">",Num,"\n",Sequence)]
 write(fasta.uni$Text,file.path(outdir,"02-Candidates-all.fasta"))
 write(fasta.uni[!Frag==TRUE,Text],file.path(outdir,"02-Candidates-all-fl.fasta"))
 write(fasta.uni[Frag==TRUE,Text],file.path(outdir,"02-Candidates-all-frag.fasta"))
-write(fasta.uni[Database=="Genome",Text],file.path(outdir,"02-Candidates-Annotated.fasta"))
+write(fasta.uni[grepl("Genome",Database),Text],file.path(outdir,"02-Candidates-Annotated.fasta"))
 
 write.table(fasta.uni[,.(Num,Name,Clade,Species,Code,Database)],file.path(outdir,"02-Candidates-all.id"),col.names = T,row.names = F,quote = F,sep = "\t")
 

@@ -7,8 +7,8 @@ PATH_RESOURCE="$HOME/Library/CloudStorage/OneDrive-Personal/Marchantia/Codes_Ana
 PATH_GENOME="$PATH_RESOURCE/01-Genomes/Combined/AllGenomes-merged.fasta"
 PATH_ONEKP="$PATH_RESOURCE/02-OneKP/Extracted/OneKP-Nonseed-merged.fasta"
 PATH_DONG="$PATH_RESOURCE/03-Dong2022/Combined/Dong2022-merged.fasta"
-# REPEAT_BLAST=True #True or False
-REPEAT_BLAST=False #True or False
+REPEAT_BLAST=True #True or False
+# REPEAT_BLAST=False #True or False
 
 #Create folder for output if not exits
 PATH_IN="$PWD/../01-Input"
@@ -97,13 +97,12 @@ echo "Merging seqs!"
 cd $PATH_CODE
 Rscript 02-MergeFasta.R
 
-
 #Scan for HK domains
 echo "==============================================="
 echo "Checking with hmmsearch!"
 cd $PATH_OUT_COPY
 cat $PATH_IN/PF00512.hmm $PATH_IN/PF02518.hmm $PATH_IN/PF00072.hmm $PATH_IN/PF03924.hmm > $PATH_IN_COPY/05-Domains.hmm
-hmmsearch --domtblout 03-Candidates-all_dom.tsv $PATH_IN_COPY/05-Domains.hmm 02-Candidates-all.fasta > 03-Candidates-all_dom.out
+hmmsearch --domtblout 03-Candidates-fl_dom.tsv $PATH_IN_COPY/05-Domains.hmm 02-Candidates-all-fl.fasta > 03-Candidates-fl_dom.out
 
 
 #Filter by HisKA
@@ -111,6 +110,7 @@ echo "==============================================="
 echo "Filter sequences by HisKA"
 cd $PATH_CODE
 Rscript 03-FilterbyHmm.R
+
 
 # align with MAFFT
 echo "==============================================="

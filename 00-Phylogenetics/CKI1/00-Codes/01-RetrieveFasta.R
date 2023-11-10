@@ -50,6 +50,7 @@ cutoff=50
   }
   
   #Load ID2Src
+  message("Loading ID2Src file for genomes...")
   ID2Src.Genome<-fread(inFile.ID2Src.Genome)
   #merge with ID2Src
   tsv.Genome<-merge(tsv.Genome,ID2Src.Genome,by.x = "saccver",by.y = "pID",all.x = T)
@@ -59,7 +60,7 @@ cutoff=50
   }
    
   #Load list of Genomes to include  
-  list.Genome<-as.data.table(read_excel(inFile.list.Genome,sheet = 1,range = cell_cols("A:J") ))
+  list.Genome<-as.data.table(read_excel(inFile.list.Genome,sheet = 1 ))
   #Check if there are any unmatches in Source names
   list.unmatch<-setdiff(ID2Src.Genome$Source,list.Genome$`File name`)
   if (length(list.unmatch)>0) {
@@ -82,6 +83,7 @@ cutoff=50
   tsv.Genome.final<-tsv.Genome.cut[primary==T,]
   
   #Load fasta sequences
+  message("Loading fasta sequence for genomes...")
   fasta.Genome<-read_fasta(inFile.fasta.Genome)
   #Check if there are any unmatches in blast hits
   list.missing<-setdiff(tsv.Genome.final$saccver, fasta.Genome$ID)
@@ -136,6 +138,7 @@ cutoff=50
   tsv.OneKP.final<-tsv.OneKP.cut[!duplicated(saccver)]
   
   #Load OneKP fasta
+  message("Loading fasta file for OneKP...")
   fasta.OneKP<-read_fasta(inFile.fasta.OneKP)
   #Check if there are any missing IDs
   list.missing<-setdiff(tsv.OneKP.final$saccver, fasta.OneKP$ID)
@@ -170,12 +173,13 @@ cutoff=50
   names(tsv.Dong)<-unlist(strsplit("qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore ppos",split=" "))
   
   #Load ID2Src
+  message("Loading ID2Src file for Dong 2022...")
   ID2Src.Dong<-fread(inFile.ID2Src.Dong)
   #merge with ID2Src
   tsv.Dong<-merge(tsv.Dong,ID2Src.Dong,by.x = "saccver",by.y = "pID",all.x = T)
   #Check any IDs not found in ID2Src
   if (sum(is.na(tsv.Dong$Source))>0){
-    message("Some blast hits not found in Genome ID2Src! Problem with parsing")
+    message("Some blast hits not found in Dong 2022 ID2Src! Problem with parsing")
   }
   
   #Load list of Genomes to include  
@@ -211,6 +215,7 @@ cutoff=50
   
   
   #Load Dong fasta
+  message("Loading fasta file for Dong 2022...")
   fasta.Dong<-read_fasta(inFile.fasta.Dong)
   #Check if there are any missing IDs
   list.missing<-setdiff(tsv.Dong.final$saccver, fasta.Dong$ID)

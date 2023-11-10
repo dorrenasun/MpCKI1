@@ -12,9 +12,9 @@ myCopy(thisfile,codedir,overwrite = T)
 #################################### Main ######################################
 
 #Load inputs
-fastafile<-file.path(outdir,"02-Candidates-all.fasta")
+fastafile<-file.path(outdir,"02-Candidates-all-fl.fasta")
 fasta<-read_fasta(fastafile)
-hmmdomfile<-file.path(outdir,"03-Candidates-all_dom.tsv")
+hmmdomfile<-file.path(outdir,"03-Candidates-fl_dom.tsv")
 hmmdom<-read_hmm_dom(hmmdomfile)
 id.file<-file.path(outdir,"02-Candidates-all.id")
 id<-fread(id.file)

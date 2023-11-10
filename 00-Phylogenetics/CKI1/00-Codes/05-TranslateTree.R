@@ -25,6 +25,7 @@ myReplace<-function(entry){
 }
 
 
+
 #################################### Main ######################################
 
 list<-list.files(outdir,pattern="\\.(contree|treefile|support)$",full.names = T,recursive = F)
@@ -45,10 +46,10 @@ if (file.exists(OTUList)){
   # suffix<-paste0(rep("T",testlen-max(nchar(dict$Num))),collapse = "")
   dict[nchar(ID)>testlen,ID:=substr(ID,1,testlen)]
   dict[duplicated(ID),ID:=Num]
-  dict[,ID:=gsub(";","|",ID)]
-  dict[,ID:=gsub("[\\(\\)]","",ID)]
+  # dict[,ID:=gsub(";","|",ID)]
+  # dict[,ID:=gsub("[\\(\\)]","",ID)]
   # dict[,ID:=paste0(suffix,Num)]
-  #dict[!substr(ID,1,1)=="'",ID:=paste0("'",ID,"'")]
+  dict[,ID:=paste0("'",ID,"'")]
 }
 
 #Process each file

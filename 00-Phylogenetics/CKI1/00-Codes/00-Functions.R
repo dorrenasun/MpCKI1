@@ -107,11 +107,12 @@ order.clade<-c("Chlorophytes",
                "Basal Angiosperms",
                "Monocots",
                "Magnoliids",
-               "Eudicots")
-order.db<-c("Genome","OneKP","Dong")
+               "Eudicots",
+               "Unknown")
+order.db<-c("Genome","OneKP","Dong","Manual")
 order.tag<-c("Core","Neighbor","Outgroup")
 Mac_home<-system("echo ~",intern = TRUE)
-Homedir<-file.path(Mac_home,"Library/CloudStorage/OneDrive-Personal/Marchantia/Manuscripts/202304-MpCKI1/Github_submission/repos/00-Phylogenetics/CKI1")
+Homedir<-file.path(Mac_home,"Library/CloudStorage/OneDrive-Personal/Marchantia/Manuscripts/202304-MpCKI1/02-Github_submission/repos/00-Phylogenetics/CKI1")
 codedir_ori<-file.path(Homedir,"00-Codes")
 indir_ori<-file.path(Homedir,"01-Input")
 outdir_ori<-file.path(Homedir,"02-Output")

@@ -85,7 +85,7 @@ if (!file.exists(file.exclude)) {
   }else {
       exclude<-c()
     } 
-  #Check if these names are meaningful
+  #Check if these names could be found in the current list
   list.missing<-setdiff(exclude,interested$Name_comb)
   if (length(list.missing)>0){
     message("\nSome sequences to exlude not found:")
@@ -101,8 +101,7 @@ if (!file.exists(file.id)) stop("Fasta id file not found! Exit!")
 myCopy(file.id,koutdir,overwrite = T)
 id<-fread(file.id)
 
-id[Database=="Genome;Manual",Database:="Genome"]
-id.sub1<-id[,.(Database,Clade,Species_sep=unlist(strsplit(Species,"[;\\|]"))),by=.(Num,Species)]
+id.sub1<-id[,.(Code_sep=unlist(strsplit(Code,"[;\\|]"))),by="Num"]
 id.sub2<-id[,.(Name_sep=unlist(strsplit(Name,"[;\\|]")),Num),by=Name]
 
 #Find out if IDs should be included by species
@@ -110,13 +109,16 @@ file.include<-list.files(path = koutdir_ori,pattern = "02-Sources.tsv",full.name
 if (!file.exists(file.include)) stop("Source file not found! Exit!")
 myCopy(file.include,koutdir,overwrite = T)
 include<-fread(file.include)
-include.id<-merge(id.sub1,include,by.x=c("Clade","Species_sep","Database"),by.y=c("Clade","Species","Database"),all.x = T,allow.cartesian = T)
+include.id<-merge(id.sub1,include,by.x=c("Code_sep"),by.y=c("Code"),all.x = T,allow.cartesian = T)
 
 #Find out IDs for names of interest
 interested.id<-merge(interested,id.sub2[,.(Name_sep,Num)],by="Name_sep")
 #Check
 list.missing<-setdiff(interested$ID,interested.id$ID)
-if (length(list.missing)>0) warning("Not all IDs were found!")
+if (length(list.missing)>0) {
+  message("Not all IDs were found for seq of interest!")
+  message(paste0(interested[ID %in% list.missing,Name_comb],collapse = "\n"))
+  }
 
 #Decide whether to keep each seq
 keep.core<-include.id[!is.na(Include_in_Core) & Include_in_Core=="T",Num]
@@ -126,10 +128,11 @@ interested.id[Tag==order.tag[2] & Num %in% keep.nei, Keep:=T]
 keep.out<-include.id[!is.na(Include_in_Outgroup) & Include_in_Outgroup=="T",Num]
 interested.id[Tag==order.tag[3] & Num %in% keep.out, Keep:=T]
 
+#Manual sequences
+manuals<-id[grepl("Manual",Database)]
+interested.id[Num %in% manuals$Num, Keep:=T]
+
 kept<-unique(interested.id[Keep==T,.(Num,Name_comb,Tag)])
-
-
-
 
 
 #Read the source fasta
@@ -138,24 +141,27 @@ if (!file.exists(file.fasta)) stop("Fasta file not found! Exit!")
 myCopy(file.fasta,koutdir,overwrite = T)
 fasta<-read_fasta(file.fasta)
 
+#Attach names for each sequence
 fasta.human<-merge(fasta,id,by.x="ID",by.y="Num",all.x=T)
+fasta.human[,HumanText:=paste0(">",Name,"\n",Sequence)]
 
 #Check if all IDs could be found
 list.missing<-setdiff(kept$Num,fasta.human$ID)
-if (length(list.missing)>0) warning("Not all IDs were found in fasta!")
+if (length(list.missing)>0) {
+  message("Not all IDs were found in fasta!")
+  message(paste(list.missing,sep = "\n"))
+  }
 
-#Select sequence & merge info
+#Select sequence
 fasta.kept<-fasta.human[ID %in% kept$Num,]
+
+
+#Integrate info for each sequence
+
 fasta.final<-merge(fasta.kept,kept[,.(ID=Num,Tag)],by="ID")
-fasta.final[,HumanText:=paste0(">",Name,"\n",Sequence)]
-fasta.final[,`:=`(Database=factor(Database,order.db),
-                  Clade=factor(Clade,order.clade),
-                  Tag=factor(Tag,order.tag)
-                  )]
 setorder(fasta.final,ID)
 write(fasta.final$Text,file.path(outdir,"06-Subtree.fasta"))
 
-setorder(fasta.final,-Tag,Clade,Database,Species,Name)
 write(fasta.final$HumanText,file.path(outdir,"06-Subtree_for_human.fasta"))
 write.table(fasta.final[,.(ID,Name,Species,Clade,Database,Tag)],
             file.path(outdir,"06-Subtree.id"),
