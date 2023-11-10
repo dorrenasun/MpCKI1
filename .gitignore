@@ -1,7 +1,11 @@
 .DS_STORE
-00-Phylogenetics/CKI1/02-Output
-00-Phylogenetics/CKI1/03-KeyOutput
-00-Phylogenetics/TestPinus
+00-Phylogenetics/CKI1/01-Genomes/Combined/
+00-Phylogenetics/CKI1/02-OneKP/Extracted/
+00-Phylogenetics/CKI1/03-Dong2022/Combined/
+00-Phylogenetics/CKI1/02-Output/
+00-Phylogenetics/CKI1/03-KeyOutput/
+00-Phylogenetics/TestPinus/
+
 01-RNA-seq/Modified_figs/
 01-RNA-seq/Output_a0.01FC0.585/
 01-RNA-seq/Refgenome/
