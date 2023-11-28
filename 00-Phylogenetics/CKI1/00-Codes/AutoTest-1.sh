@@ -7,8 +7,8 @@ PATH_RESOURCE="$PATH_CODE/../../Resources"
 PATH_GENOME="$PATH_RESOURCE/01-Genomes/Combined/AllGenomes-merged.fasta"
 PATH_ONEKP="$PATH_RESOURCE/02-OneKP/Extracted/OneKP-Nonseed-merged.fasta"
 PATH_DONG="$PATH_RESOURCE/03-Dong2022/Combined/Dong2022-merged.fasta"
-REPEAT_BLAST=True #True or False
-# REPEAT_BLAST=False #True or False
+# REPEAT_BLAST=True #True or False
+REPEAT_BLAST=False #True or False
 
 #Create folder for output if not exits
 PATH_IN="$PWD/../01-Input"

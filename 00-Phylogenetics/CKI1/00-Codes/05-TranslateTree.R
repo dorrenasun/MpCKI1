@@ -2,13 +2,15 @@
 rm(list=ls())
 message("Running 05-TranslateTree.R !")
 args <- commandArgs(trailingOnly = TRUE)
-# args<-2
+# args<-1
 Round=as.numeric(args[1])
 source("00-Functions.R")
 
 #Copy scripts
 thisfile<-file.path(codedir_ori,"05-TranslateTree.R")
 myCopy(thisfile,codedir,overwrite = T)
+
+
 
 #################################### Function ##################################
 myReplace<-function(entry){
@@ -46,7 +48,7 @@ if (file.exists(OTUList)){
   # suffix<-paste0(rep("T",testlen-max(nchar(dict$Num))),collapse = "")
   dict[nchar(ID)>testlen,ID:=substr(ID,1,testlen)]
   dict[duplicated(ID),ID:=Num]
-  # dict[,ID:=gsub(";","|",ID)]
+  dict[,ID:=gsub(";","|",ID)]
   # dict[,ID:=gsub("[\\(\\)]","",ID)]
   # dict[,ID:=paste0(suffix,Num)]
   dict[,ID:=paste0("'",ID,"'")]

@@ -30,19 +30,20 @@ read_tree<-function(nexfile){
     seqs[,Name_comb:=trimws(Name_comb,"both")]
     #Remove leading and trailing brackets
     seqs[,Name_comb:=trimws(Name_comb,"both",whitespace = "[\\(\\)]")]
-    #Remove leading and trailing quotes
-    seqs[,Name_comb:=trimws(Name_comb,"both",whitespace = "'")]
     
     seqs[,No:=1:.N]
     #Split the IDs by semicolons
     seqs_sep<-seqs[,.(No,Name_sep=unlist(strsplit(Name_comb,"[;\\|]"))),by=Name_comb]
     #Remove quotation marks
     seqs_sep[,Name_sep:=gsub("\\'","",Name_sep)]
+    seqs_sep[,Name_sep:=gsub(" ","",Name_sep)]
     setkeyv(seqs,"No")
     all_seqs<-rbind(all_seqs,seqs_sep)
   }
   return(all_seqs)
 }
+
+
 #################################### Main ######################################
 #Load files for subtrees
 file.core<-list.files(path = koutdir_ori,pattern = "06-Subtree-Core.nex",full.names = T)
@@ -71,6 +72,7 @@ outgroup[,ID:=paste0("O",No)]
 
 interested<-do.call("rbind",list(core,nei.notcore,outgroup))
 
+
 #Manually remove sequences:
 file.exclude<-list.files(path=indir_ori,pattern="Exclude.txt",full.names = T)
 if (!file.exists(file.exclude)) {
@@ -95,6 +97,7 @@ if (!file.exists(file.exclude)) {
 
 interested<-interested[!Name_comb %in% exclude,]
 
+
 #Load file for general info
 file.id<-list.files(path = koutdir_ori,pattern = "02-Candidates-all.id",full.names = T)
 if (!file.exists(file.id)) stop("Fasta id file not found! Exit!")
@@ -113,6 +116,7 @@ include.id<-merge(id.sub1,include,by.x=c("Code_sep"),by.y=c("Code"),all.x = T,al
 
 #Find out IDs for names of interest
 interested.id<-merge(interested,id.sub2[,.(Name_sep,Num)],by="Name_sep")
+
 #Check
 list.missing<-setdiff(interested$ID,interested.id$ID)
 if (length(list.missing)>0) {

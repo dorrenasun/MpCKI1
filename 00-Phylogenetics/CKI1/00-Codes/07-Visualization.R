@@ -17,7 +17,7 @@ pkg_list<-c("data.table","ggplot2","ggtree","phytools","treeio","ggmsa","dplyr",
 for (p in pkg_list) {check_package(p)}
 
 #Copy scripts
-thisfile<-file.path(codedir_ori,"06-ExtractFromSubtree.R")
+thisfile<-file.path(codedir_ori,"07-Visualization.R")
 myCopy(thisfile,codedir,overwrite = T)
 ############################# Plot Settings ####################################
 #Parameters
@@ -69,22 +69,24 @@ fill.clustal <- c(
 )
       
 fill.domain <- c(
-  # "black", #TM
-  "#4096e5", #TM
-  # "#0072B2", #TM
-  # "#56B4E9", #TM
-  "#ED7D31", #CHASE
-  #"#CC79A7", #CHASE
-  "#595959", #HK
-  #"orange", #HK
-  "#a6a6a6" #RR
-  #"#009E73" #RR
+  "TMhelix"="#4096e5", #TM
+  "CHASE_dom"="#ED7D31", #CHASE
+  "PRibTrfase_dom"="white",
+  "His_kinase_dom"="#595959", #HK
+  "HATPase_C"="#595959", #HK
+  "Sig_transdc_His_kin-like_C"="#595959", #HK
+  "HisK_dim/P"="#595959", #HK
+  "Sig_transdc_resp-reg_receiver"="#a6a6a6" #RR
 )
-
 
 #################################### Main ######################################
 #Inputs & outputs
 file.tree<-list.files(path = koutdir_ori,pattern = "08.*ordered\\.newick",full.names = T)
+
+if (sum(grepl("_np",file.tree))>0){
+  file.tree<-file.tree[grepl("_np",file.tree)][1]
+}
+
 if (!file.exists(file.tree)){
   stop("Tree file not found in 03-KeyOutput! Exit!")
 }else{
@@ -150,7 +152,7 @@ if (length(list.missing)>0){
 }
 
 #Create label with species:
-annot_uniq[,Full_Name:=paste0("[<i>",Species,"</i>] ",Name)]
+annot_uniq[,Full_Name:=paste0("[<i>",Species,"</i>] ",Short_Name)]
 
 #Fix order of legend:
 annot_uniq[,Clade:=factor(Clade,levels = order.clade)]
@@ -171,7 +173,7 @@ tree2.tbl<-as_tibble(tree2)
 
 
 { #Extract various nodes
-  node.SmCKI1L<-tree2.tbl$node[!is.na(tree2.tbl$Name)&grepl("Sm_111212",tree2.tbl$Name)]
+  node.SmCKI1L<-tree2.tbl$node[!is.na(tree2.tbl$Name)&grepl("SmCKI1",tree2.tbl$Name)]
   node.hwCKI1L<-tree2.tbl$node[!is.na(tree2.tbl$Name)&tree2.tbl$Name=="Apun_utg000041l.200.1"]
   node.CKI1L<-MRCA(tree1.tbl,node.SmCKI1L,node.hwCKI1L)$node
   
@@ -199,31 +201,49 @@ tree2.tbl$Tag[is.na(tree2.tbl$Name)&tree2.tbl$node %in% c(sub.CKI1$node,node.CKI
 
 #Read alignment file:
 align<-read_fasta(file.align)
-target_seq<-"FANASHDIRGALAG" # based on AtCKI1 seq
+#trim beginning and ending spaces
+trim_dash <- function(seq,char=" ") {
+  # Substitute begining "-"s
+  num_beg <- nchar(sub("(^-+).*", "\\1", seq))
+  ws_beg <- strrep(char, num_beg)
+  no_beg<-sub("^-+", ws_beg, seq)
+  
+  #repeat for "-" characters at the end
+  num_end <- nchar(sub(".*[^-]+", "\\1", no_beg))
+  ws_end<-strrep(char,num_end)
+  seq_out <- sub("-+$", ws_end, no_beg)
+  
+  return(seq_out)
+}
+align[,Sequence:=trim_dash(Sequence),by="ID"]
+align[,nchar:=nchar(Sequence)]
+target_seq<-"MEATQQAERKSMNKSQAFANASHDIRGALAGMKGLIDICRDGVKP" # based on AtCKI1 seq
 AtCKI1_seq<-align[ID==id.sub[grepl("AT2G47430",Name_sep),ID],Sequence]
 target_start<-unlist(gregexpr(target_seq, AtCKI1_seq))
 target_end<-target_start+nchar(target_seq)-1
-msa<-as.data.table(tidy_msa(file.align,start = target_start,end=target_end))
+
+# msa<-as.data.table(tidy_msa(file.align,target_start,target_end))
+
+msa<-data.table()
+for (i in target_start:target_end){
+  align.sub<-align[,.(name=factor(ID),position=as.numeric(i),character=substr(Sequence,i,i))]
+  msa<-rbind(msa,align.sub)
+}
 
 # msa<-merge(annot_uniq,msa_ori,by.x="Acc",by.y = "name",all = T)
 
 #Load IPR information
 ipr<-fread(file.ipr,fill=T)
-annot_len<-merge(annot_uniq,unique(ipr[,.(query,len,pos=0,wd=len/max(len))]),by.x="label",by.y = "query",all.x = T)
-annot_ipr<-merge(annot_uniq,unique(ipr[,.(query,name,len,pos=((stop+start-1-len)/2)/max(len),wd=(stop-start+1)/max(len))]),by.x="label",by.y = "query",all.x = T)
-annot_ipr[,name:=factor(name,levels = unique(name))]
+annot_len<-merge(annot_uniq,unique(ipr[,.(query,len,pos=0,wd=len/max(len))]),by.x="label",by.y = "query")
+annot_ipr<-merge(annot_uniq,unique(ipr[,.(query,name,len,pos=((stop+start-1-len)/2)/max(len),wd=(stop-start+1)/max(len))]),by.x="label",by.y = "query")
+annot_ipr[,name:=factor(name,levels = names(fill.domain))]
 
 
 { #Plot the tree: with all info
   p1 <- ggtree(as.treedata(tree2.tbl), ladderize = F, color="black",size=0.5*lwd) +
     # ggplot(tree2,ladderize=F)+
     # geom_tree(aes(color=IsCKI,size=IsCKI),size=1*lwd)+
-    geom_nodelab(
-      mapping = aes(label = label),
-      color="grey30",
-      size = 3 * lwd,
-      hjust = -0.2
-    ) +
+
     scale_color_manual(values = colors_CKI1,guide = 'none') +
     # scale_size_manual(values = c("CKI1" = lwd * 1.5, "Others" = lwd * 1)) +
     ggnewscale::new_scale_colour()  +
@@ -231,8 +251,8 @@ annot_ipr[,name:=factor(name,levels = unique(name))]
       mapping = aes(x, y, color = Clade),
       size = 1.5,
       alpha = 1,
-      shape = 15,
-      position = position_nudge(x = 0.05, y = 0),
+      shape = 16,
+      position = position_nudge(x = 0.09, y = 0),
       inherit.aes = T
     ) +
     scale_color_manual(values = colors_Clade) +
@@ -240,12 +260,18 @@ annot_ipr[,name:=factor(name,levels = unique(name))]
     geom_tiplab(
       mapping = aes(color = Clade, label = Blank),
       align = T,
-      offset = 0.5,
+      offset =1,
       size = fontsize * lwd,
       linetype = "dotted",
-      linesize = 0.5 * lwd
+      linesize = 1 * lwd
     ) +
     scale_color_manual(values = colors_Clade,guide="none") +
+    geom_nodelab(
+      mapping = aes(label = label),
+      color="grey30",
+      size = 3 * lwd,
+      hjust = -0.2
+    ) +
     # theme_classic()+
     # theme_tree()+
     geom_treescale(
@@ -277,7 +303,7 @@ annot_ipr[,name:=factor(name,levels = unique(name))]
       # fill = "grey30"#,
         # linewidth = 2 * lwd
     ) +
-    # scale_fill_manual(values = fill.domain)+
+    scale_fill_manual(values = fill.domain)+
     ggnewscale::new_scale_fill()  +
     geom_facet(
       panel = "MSA",
@@ -359,14 +385,17 @@ annot_ipr[,name:=factor(name,levels = unique(name))]
 
   # facet_grid(~panel,space="free_x")
   
-  p1 <- facet_widths(p1, c(1,0.6, 0.3,1))
+  p1 <- facet_widths(p1, c(.4,0.2, .4,1))
 plot(p1)
-outfile1<-file.path(outdir,sub(".newick",".pdf",basename(file.tree),fixed = T))
-ggsave(outfile1,p1,width = 22, height = 26,units = "cm")
+# outfile1<-file.path(outdir,sub(".newick",".pdf",basename(file.tree),fixed = T))
+outfile1<-file.path(outdir,sub(".newick",".svg",basename(file.tree),fixed = T))
+
+ggsave(outfile1,p1,width = 30, height = 26,units = "cm")
+ggsave(sub(".svg",".pdf",outfile1),p1,width = 30, height = 26,units = "cm")
 
 }
 
-stop()
+
 
 {p2<-ggtree(tree2,ladderize=F, layout="circular",aes(color=Clade),size=0.5*lwd,open.angle = 178) +
     geom_tippoint(
@@ -407,7 +436,7 @@ stop()
     geom_cladelab(node=node.AHK, label="AHK1", angle=0, 
                   barcolor="#786721",
                   fontsize=8*lwd, offset=.2, vjust=.5)  + 
-    geom_cladelab(node=node.CKR, label="CHK", angle=0, 
+    geom_cladelab(node=node.CHK, label="CHK", angle=0, 
                   barcolor="#AA4400",
                   fontsize=8*lwd, offset=.2, vjust=.5)  + 
     geom_hilight(mapping=aes(subset = node %in% node.CKI1L),
@@ -422,7 +451,7 @@ stop()
                  extend=0.2,
                  # type = "gradient", gradient.direction = 'tr',
                  alpha = .8) +
-    geom_hilight(mapping=aes(subset = node %in% node.CKR),
+    geom_hilight(mapping=aes(subset = node %in% node.CHK),
                  fill="#faecd9ff",
                  to.bottom = T,
                  extend=0.2,
@@ -433,7 +462,7 @@ stop()
     # ggplot(tree2,ladderize=F)+
     # geom_tree(aes(color=IsCKI,size=IsCKI),size=1*lwd)+
     # coord_flip()+
-    scale_color_manual(values = colors_Clade) +
+    scale_color_manual(values = colors_Clade,guide=guide_legend(override.aes= list(size=2,linewidth=0))) +
     # theme_grey()#+
     
     theme(plot.background = element_blank(),
@@ -446,8 +475,9 @@ stop()
 
           )
   plot(p2)
-  outfile1<-file.path(OutDir,"07-Subtree_EINSI_80_np-fanplot.pdf")
-  ggsave(outfile1,p2,width = 12, height = 8,units = "cm")
+  outfile2<-file.path(outdir,sub(".newick",".fanplot.svg",basename(file.tree),fixed = T))
+  ggsave(outfile2,p2,width = 12, height = 8,units = "cm")
+  ggsave(sub(".svg",".pdf",outfile2),p2,width = 12, height = 8,units = "cm")
   
 }
 

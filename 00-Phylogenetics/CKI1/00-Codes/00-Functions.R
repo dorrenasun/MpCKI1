@@ -1,9 +1,15 @@
 #################################### Environment ###############################
-
-if (!require(data.table)) install.packages("data.table")
-if (!require(R.utils)) install.packages("R.utils")
-if (!"data.table" %in% .packages()) library(data.table)
-if (!"R.utils" %in% .packages()) library(R.utils)
+check_package<-function(pkg){
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager",update = T)
+  if (!require(pkg,character.only = T,quietly = T)){
+    # message(paste(pkg,"is not here. Install."))
+    BiocManager::install(pkg,ask=F)
+    library(pkg,character.only = T)
+  }
+}
+pkg_list<-c("data.table","R.utils")
+for (p in pkg_list) {check_package(p)}
 
 #################################### Function ##################################
 #Copy scripts
@@ -112,7 +118,8 @@ order.clade<-c("Chlorophytes",
 order.db<-c("Genome","OneKP","Dong","Manual")
 order.tag<-c("Core","Neighbor","Outgroup")
 Mac_home<-system("echo ~",intern = TRUE)
-Homedir<-file.path(Mac_home,"Library/CloudStorage/OneDrive-Personal/Marchantia/Manuscripts/202304-MpCKI1/02-Github_submission/repos/00-Phylogenetics/CKI1")
+Homedir<-file.path(getwd(),"..")
+# Homedir<-file.path(Mac_home,"Library/CloudStorage/OneDrive-Personal/Marchantia/Manuscripts/202304-MpCKI1/02-Github_submission/repos/00-Phylogenetics/CKI1")
 codedir_ori<-file.path(Homedir,"00-Codes")
 indir_ori<-file.path(Homedir,"01-Input")
 outdir_ori<-file.path(Homedir,"02-Output")
