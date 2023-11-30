@@ -23,7 +23,9 @@ Working pipeline (All scripts should be run from the 00-Codes folder):
 	2. Phylogenetic inference with IQ-TREE 2 and Ultrafast bootstrap
 - Step 4: Run standard non-parametric analysis with IQ-TREE 2
 ```
-	iqtree -nt AUTO -ntmax 16 -s ./06-Subtree_EINSI.80.phy -m TEST -mset phyml -b 1000 --prefix ./07-Subtree_EINSI_80_np
+	iqtree -nt AUTO -ntmax 16 -s ./06-Subtree_LINSI.98.phy -m TEST -mset phyml -b 1000 --prefix ./07-Subtree_LINSI_98_np
+
+	(RunNP.sh)
 ```
 - Step 5: Adjust the tree branch order manually and reroot the tree. Save the adjusted tree as a newick file "07-Subtree_EINSI_80_np.treefile.ordered.newick"
 
@@ -34,6 +36,6 @@ Working pipeline (All scripts should be run from the 00-Codes folder):
 
 The files used in creating the phylogenetic tree of the manuscript is in the directory "ForPublication".
 - CKI1-all_seqs.fasta: fasta file for candidate sequences of the final tree
-- CKI1-EINSI.fasta: file for sequence alignment, before masking
-- CKI1-EINSI-mask80.fasta: file for sequence alignment, masked & used in phylogenetic inference
+- CKI1-LINSI.fasta: file for sequence alignment, before masking
+- CKI1-LINSI-mask98.fasta: file for sequence alignment, masked & used in phylogenetic inference
 - CKI1-tree.newick: file for the final phylogenetic tree, in a machine-readable form
